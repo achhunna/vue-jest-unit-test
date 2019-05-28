@@ -38,7 +38,12 @@ export default {
             this.$emit('search');
         },
         asyncFunction() {
-            setTimeout(() => this.$emit('asyncComplete'), 1000);
+            return new Promise((resolve, reject) => {
+                    resolve();
+                }).then(() => {
+                    this.$emit('asyncComplete');
+                    return 'Async complete';
+                });
         },
         resetEvent() {
             setTimeout(() => this.event = null, 3000);

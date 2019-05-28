@@ -44,9 +44,15 @@ describe('Component', () => {
         expect(wrapper.vm.name).toBe('Vue');
         expect(wrapper.vm.value).toBe('Component');
     });
-    test('check asyncFunction', async() => {
-        await wrapper.vm.asyncFunction();
-        jest.runOnlyPendingTimers();
+    test('check asyncFunction() emits and sets value', async () => {
+        const data = await wrapper.vm.asyncFunction();
         expect(wrapper.emitted().asyncComplete.length).toBe(1);
+        expect(data).toEqual('Async complete');
+    });
+    test('check resetEvent() updates event', () => {
+        wrapper.vm.handleCloseBtnClick(); // change event value
+        wrapper.vm.resetEvent();
+        jest.runOnlyPendingTimers();
+        expect(wrapper.vm.event).toBe(null);
     });
 });
