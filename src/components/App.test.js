@@ -2,14 +2,18 @@ import { shallowMount } from '@vue/test-utils';
 import Component from './App';
 
 let wrapper;
-
-beforeEach(() => {
-    wrapper = shallowMount(Component, {
+const factory = (computed = {}) => {
+    return shallowMount(Component, {
         propsData: {},
         mocks: {},
         stubs: {},
         methods: {},
+        computed,
     });
+};
+
+beforeEach(() => {
+    wrapper = factory();
 });
 
 afterEach(() => {
@@ -17,8 +21,8 @@ afterEach(() => {
 });
 
 jest.mock('../constants', () => ({
-    name: 'Vue',
-    value: 'Component',
+    firstName: 'Vue',
+    lastName: 'Component',
 }));
 jest.useFakeTimers();
 
@@ -41,8 +45,8 @@ describe('Component', () => {
         expect(wrapper.vm.search).toBeCalled();
     });
     test('checking data values from mocked module', () => {
-        expect(wrapper.vm.name).toBe('Vue');
-        expect(wrapper.vm.value).toBe('Component');
+        expect(wrapper.vm.firstName).toBe('Vue');
+        expect(wrapper.vm.lastName).toBe('Component');
     });
     test('check asyncFunction() emits and sets value', async () => {
         const data = await wrapper.vm.asyncFunction();
@@ -54,5 +58,9 @@ describe('Component', () => {
         wrapper.vm.resetEvent();
         jest.runOnlyPendingTimers();
         expect(wrapper.vm.event).toBe(null);
+    });
+    test('overriding computed value', () => {
+        wrapper = factory({ fullName() { return 'New name' } });
+        expect(wrapper.find('child-stub').text()).toBe('I am a child. My first name is Vue. My last name is Component. My full name is New name.');
     });
 });

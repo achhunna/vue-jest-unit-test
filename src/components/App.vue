@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
         <child>
-            I am a child. My name is {{ name }}. This is my {{ value }}.
+            I am a child. My first name is {{ firstName }}. My last name is {{ lastName }}. My full name is {{ fullName }}.
         </child>
         <transition name="fade">
             <div v-if="event">You dispatched {{ event }} event.</div>
@@ -22,10 +22,15 @@ export default {
     },
     data() {
         return {
-            name: Constants.name,
-            value: Constants.value,
+            firstName: Constants.firstName,
+            lastName: Constants.lastName,
             event: null,
         }
+    },
+    computed: {
+        fullName() {
+            return `${this.firstName} ${this.lastName}`;
+        },
     },
     methods: {
         handleCloseBtnClick() {
